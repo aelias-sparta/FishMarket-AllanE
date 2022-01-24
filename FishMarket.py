@@ -31,10 +31,11 @@ class FishMarket():
 
     def transformation(self,):
         data = self.extract_csv()
-        output = data.groupby('Species').mean()
-        file_csv = output.to_csv("AllanE_Avg.csv",index=False)
-        return file_csv
+        df_avg = data.groupby('Species').mean()
+        filename = "AllanE_Avg.csv"
+        df_avg.to_csv(filename)
+        return [filename, df_avg]
 
-    def loading(self):
+    def data_loader(self):
         extracted_data = self.transformation()
-        self.s3_client.upload_file(Filename=extracted_data, Bucket=self.bucket_name, Key="Data26/Test/AllanE_FishMarket.csv")
+        self.s3_client.upload_file(Filename="AllanE_Avg.csv", Bucket=self.bucket_name, Key="Data26/Test/AllanE_FishMarket.csv")
