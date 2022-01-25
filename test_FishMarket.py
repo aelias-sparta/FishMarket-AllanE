@@ -5,6 +5,7 @@ from FishMarket import FishMarket
 import boto3
 from pandas.testing import assert_frame_equal
 s3_client = boto3.client("s3")
+s3_resource = boto3.resource("s3")
 test_obj = FishMarket(bucket_name="data-eng-resources", prefix='python')
 
 class TestFishMarket(unittest.TestCase):
@@ -25,9 +26,14 @@ class TestFishMarket(unittest.TestCase):
         with open(file, 'r') as csv_file:
             reader = csv.reader(csv_file, dialect='excel')
             self.assertEqual(next(reader), ["Species","Weight","Length1","Length2","Length3","Height","Width"])
-            # self.assertEqual(next(reader), ["Bream",621.0342592219048,33.30624040942857,36.63864104609524,41.38783637542857,
-            #                                 18.699551565333334,6.175619729380953])
-        assert df_avg.shape == (7, 6) # the averahe dataframe should be 7 columns by 6 rows
+        assert df_avg.shape == (7, 6) # the average dataframe should be 7 columns by 6 rows
+
+    # checking if the files are saved in the s3 storage
+    def test_data_loader(self):
+        bucket = s3_resource.Bucket("data-eng-resources")
+        contents = bucket.objects.all()
+        file_names = [item.key for item in contents]
+        assert f'Data26/fish/{test_obj.transformation()[0]}' in file_names
 
 if __name__ == '__main__':
     unittest.main()

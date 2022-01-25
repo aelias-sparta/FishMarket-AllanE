@@ -20,8 +20,8 @@ class FishMarket():
     def extract_csv(self):
         bucket_contents = self.s3_client.list_objects_v2(Bucket=self.bucket_name, Prefix=self.prefix)
         list_csv = []
-        for object in bucket_contents['Contents']:
-            if 'fish-market' in object['Key']:
+        for object in bucket_contents['Contents']: # loop throught the backets
+            if 'fish-market' in object['Key']: # check if the key is 'fish-market'
                 file = object['Key']
                 file_csv = self.s3_client.get_object(Bucket=self.bucket_name, Key=file)
                 df = pd.read_csv(file_csv['Body'])
@@ -29,13 +29,13 @@ class FishMarket():
         combined_data = pd.concat(list_csv, join="outer", ignore_index=True)
         return combined_data
 
-    def transformation(self,):
+    def transformation(self):
         data = self.extract_csv()
         df_avg = data.groupby('Species').mean()
-        filename = "AllanE_Avg.csv"
-        df_avg.to_csv(filename)
-        return [filename, df_avg]
+        filename = "AllanE_FishMarket.csv"
+        df_avg.to_csv(filename) # converting dataframe to csv
+        return [filename, df_avg] # return both the name and transformed dataframe
 
     def data_loader(self):
         extracted_data = self.transformation()
-        self.s3_client.upload_file(Filename="AllanE_Avg.csv", Bucket=self.bucket_name, Key="Data26/Test/AllanE_FishMarket.csv")
+        self.s3_client.upload_file(Filename="AllanE_FishMarket.csv", Bucket=self.bucket_name, Key="Data26/fish/AllanE_FishMarket.csv")

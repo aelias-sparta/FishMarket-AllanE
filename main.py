@@ -1,5 +1,5 @@
 from FishMarket import FishMarket
-
+import boto3
 
 if __name__ == '__main__':
     # declaring the bucket names and objects
@@ -9,7 +9,7 @@ if __name__ == '__main__':
     obj = FishMarket(bucket_name, prefix)
     # calling the loader function to load the data back into the s3 storage
     obj.data_loader()
-    file, df_avg = obj.transformation()
-    print(df_avg)
+    # file, df_avg = obj.transformation()
+    # print(df_avg)
 
 
