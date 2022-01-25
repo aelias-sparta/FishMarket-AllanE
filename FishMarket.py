@@ -38,4 +38,4 @@ class FishMarket():
 
     def data_loader(self):
         extracted_data = self.transformation()
-        self.s3_client.upload_file(Filename="AllanE_FishMarket.csv", Bucket=self.bucket_name, Key="Data26/fish/AllanE_FishMarket.csv")
+        self.s3_client.upload_file(Filename={f'self.transformation()[0]'}, Bucket=self.bucket_name, Key="Data26/fish/AllanE_FishMarket.csv")
